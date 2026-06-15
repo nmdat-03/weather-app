@@ -1,14 +1,17 @@
 import { formatTemp } from "@/lib/format";
+import { LocationResult } from "@/services/geocoding";
 import { WeatherData } from "@/types/weather";
 import Image from "next/image";
 import Link from "next/link";
 
 type WeatherCardProps = {
     weatherData: WeatherData | null;
+    selectedLocation: LocationResult | null;
 };
 
 export default function WeatherCard({
     weatherData,
+    selectedLocation,
 }: WeatherCardProps) {
     if (!weatherData) return null;
 
@@ -17,11 +20,11 @@ export default function WeatherCard({
     return (
         <div className="absolute right-6 top-24 z-10 w-86 rounded-2xl border border-white/20 bg-white/10 p-6 text-white backdrop-blur-xl">
             <h2 className="text-2xl font-bold">
-                {weatherData.location.name}
+                {selectedLocation?.name ?? weatherData.location.name}
             </h2>
 
             <p className="text-sm text-white/70">
-                {weatherData.location.country}
+                {selectedLocation?.country ?? weatherData.location.country}
             </p>
 
             <div className="mt-4">
@@ -62,7 +65,9 @@ export default function WeatherCard({
             </div>
 
             <Link
-                href={`/weather/${weatherData.location.lat},${weatherData.location.lon}`}
+                href={`/weather/${weatherData.location.lat},${weatherData.location.lon}?name=${encodeURIComponent(
+                    selectedLocation?.name ?? weatherData.location.name
+                )}`}
                 className="mt-6 inline-flex rounded-lg bg-white px-4 py-2 text-black transition hover:opacity-90"
             >
                 View Details

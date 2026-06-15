@@ -13,20 +13,17 @@ import { getWeather } from "@/services/weather";
 
 export default async function WeatherDetailsPage({
     params,
+    searchParams,
 }: {
-    params: Promise<{
-        city: string;
-    }>
+    params: Promise<{city: string}>;
+    searchParams: Promise<{name?: string}>;
 }) {
     const { city } = await params;
-
-    console.log("PARAM:", city);
+    const { name } = await searchParams;
 
     const weather = await getWeather(
         decodeURIComponent(city)
     );
-
-    console.log("WEATHER LOCATION:", weather.location);
 
     const backgroundGradient = getWeatherGradient(
         weather.current.condition.text
@@ -44,7 +41,7 @@ export default async function WeatherDetailsPage({
                 <BackButton />
 
                 <LocationInfo
-                    city={weather.location.name}
+                    city={name ?? weather.location.name}
                     country={weather.location.country}
                     localtime={weather.location.localtime}
                 />

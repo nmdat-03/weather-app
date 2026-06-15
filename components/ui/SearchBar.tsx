@@ -48,25 +48,15 @@ export default function SearchBar({
         }, 400);
     };
 
-    const handleSubmit = async (
+    const handleSubmit = (
         e: React.FormEvent<HTMLFormElement>
     ) => {
         e.preventDefault();
-
-        if (results.length === 0) return;
-
-        const location = results[0];
-
-        onSelectLocation(location);
-
-        setQuery(`${location.name}, ${location.country}`);
-        setResults([]);
     };
 
     return (
         <div className="absolute left-1/2 top-6 z-20 w-80 -translate-x-1/2">
             <div className="relative">
-
                 <form
                     onSubmit={handleSubmit}
                     className="relative flex items-center"
@@ -87,16 +77,7 @@ export default function SearchBar({
             </div>
 
             {(results.length > 0 || loading) && (
-                <div
-                    className="
-                        mt-2
-                        overflow-hidden
-                        rounded-xl
-                        border border-white/10
-                        bg-black/70
-                        backdrop-blur-xl
-                    "
-                >
+                <div className="mt-2 overflow-hidden rounded-xl border border-white/10 bg-black/70 backdrop-blur-xl">
                     {loading && (
                         <div className="px-4 py-3 text-sm text-white/60">
                             Searching...

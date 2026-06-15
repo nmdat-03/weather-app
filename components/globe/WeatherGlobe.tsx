@@ -2,15 +2,13 @@
 
 import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
-import SearchBar from "../weather/SearchBar";
+import SearchBar from "../ui/SearchBar";
 import { LocationResult } from "@/services/geocoding";
 import { getWeather } from "@/services/weather";
 import WeatherCard from "../weather/WeatherCard";
 import { WeatherData } from "@/types/weather";
 
-const Globe = dynamic(() => import("react-globe.gl"), {
-    ssr: false,
-});
+const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 type Marker = {
     lat: number;
@@ -21,6 +19,8 @@ export default function WeatherGlobe() {
     const globeRef = useRef<unknown>(undefined);
 
     const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+
+    const [selectedLocation, setSelectedLocation] = useState<LocationResult | null>(null);
 
     const [markers, setMarkers] = useState<Marker[]>([]);
 
@@ -50,6 +50,8 @@ export default function WeatherGlobe() {
         location: LocationResult
     ) => {
         try {
+            setSelectedLocation(location);
+
             flyToLocation(location.lat, location.lon);
 
             setMarkers([
@@ -73,7 +75,10 @@ export default function WeatherGlobe() {
         <div className="relative h-screen w-full">
             <SearchBar onSelectLocation={handleSelectLocation} />
 
-            <WeatherCard weatherData={weatherData} />
+            <WeatherCard
+                weatherData={weatherData}
+                selectedLocation={selectedLocation}
+            />
 
             <Globe
                 ref={globeRef as never}
@@ -91,3 +96,4 @@ export default function WeatherGlobe() {
         </div>
     );
 }
+
