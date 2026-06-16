@@ -1,8 +1,11 @@
+"use client";
+
 import { getUvInfo } from "@/lib/uv";
 import { Sun } from "lucide-react";
 import LevelBar from "../ui/LevelBar";
 import { WeatherData } from "@/types/weather";
 import { formatHour } from "@/lib/format";
+import { motion } from "framer-motion";
 
 type UVCardProps = {
     uv: number;
@@ -28,7 +31,8 @@ export default function UVCard({
         uv <= 2 ? 1
             : uv <= 5 ? 2
                 : uv <= 7 ? 3
-                    : uv <= 10 ? 4 : 5;
+                    : uv <= 10 ? 4
+                        : 5;
 
     const glassClass = `
         relative
@@ -51,22 +55,31 @@ export default function UVCard({
     `;
 
     return (
-        <div className={glassClass}>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className={glassClass}
+        >
             <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-linear-to-b from-white/20 to-transparent" />
 
             <div className="mb-5 flex items-center justify-between">
-                <h2 className="flex gap-2 items-center text-xl font-semibold">
+                <h2 className="flex items-center gap-2 text-xl font-semibold">
                     <Sun size={20} />
                     UV Index
                 </h2>
 
-                <span className={`rounded-full px-3 py-1 text-sm font-medium text-white ${info.color}`}>
+                <span
+                    className={`rounded-full px-3 py-1 text-sm font-medium text-white ${info.color}`}
+                >
                     {info.label}
                 </span>
             </div>
 
             <div className="mb-5">
-                <p className={`flex justify-center text-5xl font-bold ${info.textColor}`}>
+                <p
+                    className={`flex justify-center text-5xl font-bold ${info.textColor}`}
+                >
                     {uv}
                 </p>
             </div>
@@ -77,17 +90,22 @@ export default function UVCard({
                     current={uvLevel}
                     color={info.color}
                 />
+
                 <p className="mt-3 text-sm">
                     {info.description}
                 </p>
             </div>
 
             <div>
-                <p className="text-sm opacity-70">High UV Period</p>
+                <p className="text-sm opacity-70">
+                    High UV Period
+                </p>
+
                 <p className="mt-1 text-lg font-semibold">
-                    {highUvPeriod ?? "Low UV throughout the day"}
+                    {highUvPeriod ??
+                        "Low UV throughout the day"}
                 </p>
             </div>
-        </div>
+        </motion.div>
     );
 }

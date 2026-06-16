@@ -1,6 +1,9 @@
+"use client";
+
 import { getAirQualityInfo } from "@/lib/airQuality";
 import { BadgeInfo } from "lucide-react";
 import LevelBar from "../ui/LevelBar";
+import { motion } from "framer-motion";
 
 type AirQualityCardProps = {
     airQuality: {
@@ -35,11 +38,16 @@ export default function AirQualityCard({
     `;
 
     return (
-        <div className={glassClass}>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className={glassClass}
+        >
             <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-linear-to-b from-white/20 to-transparent" />
 
             <div className="mb-5 flex items-center justify-between">
-                <h2 className="flex gap-2 items-center text-xl font-semibold">
+                <h2 className="flex items-center gap-2 text-xl font-semibold">
                     <BadgeInfo size={20} />
                     Air Quality
                 </h2>
@@ -52,7 +60,9 @@ export default function AirQualityCard({
             </div>
 
             <div className="mb-5">
-                <p className={`flex justify-center text-5xl font-bold ${aqi.textColor}`}>
+                <p
+                    className={`flex justify-center text-5xl font-bold ${aqi.textColor}`}
+                >
                     {airQuality["us-epa-index"]}
                 </p>
             </div>
@@ -63,6 +73,7 @@ export default function AirQualityCard({
                     current={airQuality["us-epa-index"]}
                     color={aqi.color}
                 />
+
                 <p className="mt-3 text-sm">
                     {aqi.description}
                 </p>
@@ -72,6 +83,7 @@ export default function AirQualityCard({
                 <p className="text-sm opacity-70">
                     PM2.5
                 </p>
+
                 <p className="mt-1 text-lg font-semibold">
                     {airQuality.pm2_5.toFixed(1)}
                     <span className="ml-1 text-sm font-normal">
@@ -79,7 +91,6 @@ export default function AirQualityCard({
                     </span>
                 </p>
             </div>
-
-        </div>
+        </motion.div>
     );
 }

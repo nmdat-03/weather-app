@@ -1,3 +1,5 @@
+"use client";
+
 import { formatTemp } from "@/lib/format";
 import { WeatherData } from "@/types/weather";
 import {
@@ -7,6 +9,7 @@ import {
     ThermometerSun,
     Wind,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 type WeatherStatsProps = {
     current: WeatherData["current"];
@@ -20,6 +23,18 @@ function getTemperatureColor(temp: number) {
     if (temp <= 36) return "text-orange-500";
     return "text-red-500";
 }
+
+const containerVariants = {
+    hidden: {},
+    show: {
+        transition: { staggerChildren: 0.1 },
+    },
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 },
+};
 
 export default function WeatherStats({
     current,
@@ -78,10 +93,18 @@ export default function WeatherStats({
 
     return (
         <div className="space-y-4">
-            {/* MAIN STATS */}
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+            <motion.div
+                className="grid grid-cols-1 gap-4 md:grid-cols-3"
+                variants={containerVariants}
+                initial="hidden"
+                animate="show"
+            >
                 {/* TEMPERATURE */}
-                <div className={`${glassClass}`}>
+                <motion.div
+                    variants={itemVariants}
+                    transition={{ duration: 0.5 }}
+                    className={glassClass}
+                >
                     <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-linear-to-b from-white/20 to-transparent" />
 
                     <div className="relative h-full min-h-28 md:min-h-40">
@@ -94,19 +117,21 @@ export default function WeatherStats({
 
                         <div className="absolute inset-0 flex items-center justify-center">
                             <p
-                                className={`text-5xl md:text-7xl font-bold ${temperatureColor}`}
+                                className={`text-5xl font-bold md:text-7xl ${temperatureColor}`}
                             >
                                 {temperatureStat.value}
                             </p>
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* OTHER STATS */}
-                <div className="md:col-span-2 grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 md:col-span-2">
                     {stats.map((stat) => (
-                        <div
+                        <motion.div
                             key={stat.label}
+                            variants={itemVariants}
+                            transition={{ duration: 0.5 }}
                             className={glassClass}
                         >
                             <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-linear-to-b from-white/20 to-transparent" />
@@ -123,10 +148,10 @@ export default function WeatherStats({
                                     {stat.value}
                                 </p>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 }

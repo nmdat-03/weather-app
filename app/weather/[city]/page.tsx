@@ -10,13 +10,14 @@ import UVCard from "@/components/weather/UVCard";
 import WeatherStats from "@/components/weather/WeatherStats";
 import { getWeatherGradient } from "@/lib/weather-theme";
 import { getWeather } from "@/services/weather";
+import { CalendarDays, Clock, CloudRain, SunSnow } from "lucide-react";
 
 export default async function WeatherDetailsPage({
     params,
     searchParams,
 }: {
-    params: Promise<{city: string}>;
-    searchParams: Promise<{name?: string}>;
+    params: Promise<{ city: string }>;
+    searchParams: Promise<{ name?: string }>;
 }) {
     const { city } = await params;
     const { name } = await searchParams;
@@ -37,7 +38,7 @@ export default async function WeatherDetailsPage({
         <div className={`min-h-screen`}>
             <div className={`fixed inset-0 -z-10 bg-linear-to-b ${backgroundGradient}`} />
 
-            <div className="container-custom w-full space-y-5 overflow-hidden">
+            <div className="container-custom w-full space-y-10 overflow-x-hidden">
                 <BackButton />
 
                 <LocationInfo
@@ -67,8 +68,9 @@ export default async function WeatherDetailsPage({
                 </div>
 
                 {/* HOURLY FORECAST */}
-                <div className="mt-8 bg-white/50 p-4 rounded-2xl backdrop-blur-2xl">
-                    <h2 className="text-2xl font-semibold">
+                <div className="bg-white/50 p-4 rounded-2xl backdrop-blur-2xl">
+                    <h2 className="flex items-center gap-2 text-2xl font-semibold">
+                        <Clock size={20} />
                         Hourly Forecast
                     </h2>
 
@@ -80,10 +82,11 @@ export default async function WeatherDetailsPage({
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 md:gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     {/* 7-DAY FORECAST */}
-                    <div className="mt-8 bg-white/50 p-4 rounded-2xl backdrop-blur-2xl">
-                        <h2 className="text-2xl font-semibold">
+                    <div className="bg-white/50 p-4 rounded-2xl backdrop-blur-2xl">
+                        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+                            <CalendarDays size={20} />
                             7-Day Forecast
                         </h2>
 
@@ -92,10 +95,11 @@ export default async function WeatherDetailsPage({
                         </div>
                     </div>
 
-                    <div className="mt-8 flex flex-col justify-between gap-5">
+                    <div className="flex flex-col justify-between gap-5">
                         {/* TEMPERATURE CHART */}
                         <div className="bg-white/80 p-4 rounded-2xl backdrop-blur-2xl">
-                            <h2 className="text-2xl font-semibold">
+                            <h2 className="flex items-center gap-2 text-2xl font-semibold">
+                                <SunSnow size={20} />
                                 Temperature Trend
                             </h2>
                             <div className="mt-4">
@@ -105,7 +109,8 @@ export default async function WeatherDetailsPage({
 
                         {/* RAIN CHART */}
                         <div className="bg-white/80 p-4 rounded-2xl backdrop-blur-2xl">
-                            <h2 className="text-2xl font-semibold">
+                            <h2 className="flex items-center gap-2 text-2xl font-semibold">
+                                <CloudRain size={20} />
                                 Rain Chance
                             </h2>
 

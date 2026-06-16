@@ -1,3 +1,5 @@
+"use client";
+
 import {
     Sunrise,
     Sunset,
@@ -5,6 +7,8 @@ import {
     CircleDashed,
     SunMoon,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { getMoonPhaseIcon } from "@/lib/moon";
 
 type SunInfoProps = {
     sunrise: string;
@@ -16,10 +20,12 @@ type SunInfoProps = {
 function InfoItem({
     icon,
     label,
+    valueIcon,
     value,
 }: {
     icon: React.ReactNode;
     label: string;
+    valueIcon?: React.ReactNode,
     value: string;
 }) {
     return (
@@ -29,9 +35,13 @@ function InfoItem({
                 {label}
             </p>
 
-            <p className="text-center text-xl font-bold">
-                {value}
-            </p>
+            <div className="flex items-center justify-center gap-2">
+                {valueIcon}
+
+                <p className="text-xl font-bold">
+                    {value}
+                </p>
+            </div>
         </div>
     );
 }
@@ -42,6 +52,8 @@ export default function SunInfo({
     moonPhase,
     moonIllumination,
 }: SunInfoProps) {
+    const moonIcon = getMoonPhaseIcon(moonPhase);
+
     const glassClass = `
         relative
         overflow-hidden
@@ -63,11 +75,16 @@ export default function SunInfo({
     `;
 
     return (
-        <div className={glassClass}>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className={glassClass}
+        >
             <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-linear-to-b from-white/20 to-transparent" />
 
             <div className="mb-5">
-                <h2 className="flex gap-2 items-center text-xl font-semibold">
+                <h2 className="flex items-center gap-2 text-xl font-semibold">
                     <SunMoon size={20} />
                     Sun & Moon Info
                 </h2>
@@ -90,6 +107,11 @@ export default function SunInfo({
                     icon={<Moon size={22} />}
                     label="Moon Phase"
                     value={moonPhase}
+                    valueIcon={
+                        <span className="text-2xl">
+                            {moonIcon}
+                        </span>
+                    }
                 />
 
                 <InfoItem
@@ -97,8 +119,7 @@ export default function SunInfo({
                     label="Illumination"
                     value={`${moonIllumination}%`}
                 />
-
             </div>
-        </div>
+        </motion.div>
     );
 }
