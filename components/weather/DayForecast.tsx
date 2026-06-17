@@ -1,6 +1,9 @@
+"use client"
+
 import Image from "next/image";
 import type { WeatherData } from "@/types/weather";
 import { formatFullDate, formatTemp } from "@/lib/format";
+import { motion } from "framer-motion";
 
 type DayForecastProps = {
     forecast: WeatherData["forecast"]["forecastday"];
@@ -33,9 +36,12 @@ export default function DayForecast({
     return (
         <div className="grid gap-4">
             {forecast.map((day, index) => (
-                <div
+                <motion.div
                     key={day.date}
-                    className={`grid grid-cols-[auto_1fr_auto] items-center gap-4 ${glassClass}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.06 }}
+                    className={`flex items-center gap-4 ${glassClass}`}
                 >
                     <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-linear-to-b from-white/20 to-transparent" />
 
@@ -44,11 +50,17 @@ export default function DayForecast({
                         alt={day.day.condition.text}
                         width={64}
                         height={64}
+                        className="h-12 w-12 md:h-16 md:w-16"
                     />
 
-                    <div>
+                    <div className="flex flex-col items-center">
+                        <p className="text-md md:text-2xl font-semibold">{formatTemp(day.day.maxtemp_c)}</p>
+                        <p className="text-sm md:text-md">{formatTemp(day.day.mintemp_c)}</p>
+                    </div>
+
+                    <div className="flex flex-col">
                         <div className="flex items-center gap-2">
-                            <p className="font-medium">
+                            <p className="text-sm md:text-xl font-medium">
                                 {formatFullDate(day.date)}
                             </p>
 
@@ -59,16 +71,13 @@ export default function DayForecast({
                             )}
                         </div>
 
-                        <p className="text-md">
+                        <p className="text-xs md:text-lg">
                             {day.day.condition.text}
                         </p>
                     </div>
 
-                    <div className="text-right">
-                        <p>Max: {formatTemp(day.day.maxtemp_c)}</p>
-                        <p>Min: {formatTemp(day.day.mintemp_c)}</p>
-                    </div>
-                </div>
+
+                </motion.div>
             ))}
         </div>
     );

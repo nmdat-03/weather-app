@@ -68,7 +68,7 @@ export default function WeatherCard({
                 href={`/weather/${weatherData.location.lat},${weatherData.location.lon}?name=${encodeURIComponent(
                     selectedLocation?.name ?? weatherData.location.name
                 )}`}
-                className="mt-6 inline-flex rounded-lg bg-white px-4 py-2 text-black transition hover:opacity-90"
+                className="mt-6 inline-flex rounded-lg bg-linear-to-t from-zinc-300 via-zinc-200 to-zinc-100 px-4 py-2 text-black transition hover:opacity-90"
             >
                 View Details
             </Link>

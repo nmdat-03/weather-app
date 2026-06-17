@@ -69,7 +69,7 @@ export default function SearchBar({
 
                     <button
                         type="submit"
-                        className="absolute right-2 top-1/2 flex h-8 w-10 -translate-y-1/2 items-center justify-center rounded-lg bg-white text-black transition hover:scale-105"
+                        className="absolute right-2 top-1/2 flex h-8 w-10 -translate-y-1/2 items-center justify-center rounded-lg bg-linear-to-t from-zinc-300 via-zinc-200 to-zinc-100 text-black transition hover:scale-105"
                     >
                         <Search size={16} />
                     </button>
