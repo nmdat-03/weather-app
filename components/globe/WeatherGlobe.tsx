@@ -20,34 +20,32 @@ type Marker = {
 };
 
 export default function WeatherGlobe() {
-    const globeRef = useRef<unknown>(undefined);
+    const globeRef = useRef<{
+        pointOfView: (
+            coords: {
+                lat: number;
+                lng: number;
+                altitude?: number;
+            },
+            ms?: number
+        ) => void;
+    } | null>(null);
 
-    const [weatherData, setWeatherData] =
-        useState<WeatherData | null>(null);
+    const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
 
-    const [selectedLocation, setSelectedLocation] =
-        useState<LocationResult | null>(null);
+    const [selectedLocation, setSelectedLocation] = useState<LocationResult | null>(null);
 
     const [markers, setMarkers] = useState<Marker[]>([]);
 
     const [loading, setLoading] = useState(false);
 
+    const [errorMessage, setErrorMessage] = useState("");
+
     const flyToLocation = (
         lat: number,
         lng: number
     ) => {
-        (
-            globeRef.current as {
-                pointOfView: (
-                    coords: {
-                        lat: number;
-                        lng: number;
-                        altitude?: number;
-                    },
-                    ms?: number
-                ) => void;
-            }
-        )?.pointOfView(
+        globeRef.current?.pointOfView(
             {
                 lat,
                 lng,
@@ -62,6 +60,7 @@ export default function WeatherGlobe() {
     ) => {
         try {
             setLoading(true);
+            setErrorMessage("");
 
             setSelectedLocation(location);
 
@@ -77,16 +76,78 @@ export default function WeatherGlobe() {
                 },
             ]);
 
-            const weather = await getWeather(
-                `${location.lat},${location.lon}`
-            );
+            const weather = await getWeather(`${location.lat},${location.lon}`);
 
             setWeatherData(weather);
         } catch (error) {
             console.error(error);
+
+            setErrorMessage("Failed to load weather data.");
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleCurrentLocation = () => {
+        if (!navigator.geolocation) {
+            setErrorMessage("Geolocation is not supported by your browser.");
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                try {
+                    setLoading(true);
+                    setErrorMessage("");
+
+                    const lat = position.coords.latitude;
+
+                    const lon = position.coords.longitude;
+
+                    flyToLocation(lat, lon);
+
+                    setMarkers([{ lat, lng: lon }]);
+
+                    const weather = await getWeather(`${lat},${lon}`);
+
+                    setWeatherData(weather);
+
+                    setSelectedLocation(null);
+                } catch (error) {
+                    console.error(error);
+
+                    setErrorMessage(
+                        "Failed to load weather data."
+                    );
+                } finally {
+                    setLoading(false);
+                }
+            },
+            (error) => {
+                console.error(error);
+
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        setErrorMessage("Location access denied. Please search for a city manually.");
+                        break;
+
+                    case error.POSITION_UNAVAILABLE:
+                        setErrorMessage("Location information is unavailable.");
+                        break;
+
+                    case error.TIMEOUT:
+                        setErrorMessage("Location request timed out.");
+                        break;
+
+                    default:
+                        setErrorMessage("Unable to retrieve your location.");
+                }
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+            }
+        );
     };
 
     return (
@@ -97,51 +158,43 @@ export default function WeatherGlobe() {
             {/* SearchBar */}
             <motion.div
                 className="relative z-20"
-                initial={{
-                    y: -40,
-                    opacity: 0,
-                }}
-                animate={{
-                    y: 0,
-                    opacity: 1,
-                }}
-                transition={{
-                    duration: 0.6,
-                }}
+                initial={{ y: -40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6 }}
             >
                 <SearchBar
-                    onSelectLocation={
-                        handleSelectLocation
-                    }
+                    onSelectLocation={handleSelectLocation}
+                    onCurrentLocation={handleCurrentLocation}
                 />
             </motion.div>
+
+            {/* Error Message */}
+            <AnimatePresence>
+                {errorMessage && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute left-1/2 top-24 z-30 -translate-x-1/2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm text-red-200 backdrop-blur-md"
+                    >
+                        {errorMessage}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Weather Card */}
             <AnimatePresence mode="wait">
                 {weatherData && (
                     <motion.div
                         key={`${weatherData.location.lat}-${weatherData.location.lon}`}
-                        initial={{
-                            opacity: 0,
-                            x: 60,
-                        }}
-                        animate={{
-                            opacity: 1,
-                            x: 0,
-                        }}
-                        exit={{
-                            opacity: 0,
-                            x: 60,
-                        }}
-                        transition={{
-                            duration: 0.4,
-                        }}
+                        initial={{ opacity: 0, x: 60 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 60 }}
+                        transition={{ duration: 0.4 }}
                     >
                         <WeatherCard
                             weatherData={weatherData}
-                            selectedLocation={
-                                selectedLocation
-                            }
+                            selectedLocation={selectedLocation}
                         />
                     </motion.div>
                 )}
@@ -151,15 +204,9 @@ export default function WeatherGlobe() {
             <AnimatePresence>
                 {loading && (
                     <motion.div
-                        initial={{
-                            opacity: 0,
-                        }}
-                        animate={{
-                            opacity: 1,
-                        }}
-                        exit={{
-                            opacity: 0,
-                        }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         className="absolute left-1/2 top-24 z-30 -translate-x-1/2 rounded-full border border-white/20 bg-black/40 px-4 py-2 backdrop-blur-md"
                     >
                         <span className="text-sm text-white">
@@ -172,15 +219,9 @@ export default function WeatherGlobe() {
             {/* Globe */}
             <motion.div
                 className="h-full w-full"
-                initial={{
-                    opacity: 0,
-                }}
-                animate={{
-                    opacity: 1,
-                }}
-                transition={{
-                    duration: 1,
-                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
             >
                 <Globe
                     ref={globeRef as never}
@@ -190,7 +231,6 @@ export default function WeatherGlobe() {
                     htmlElementsData={markers}
                     htmlElement={() => {
                         const el = document.createElement("div");
-
                         el.innerHTML = `
                         <div class="marker-wrapper">
                             <div class="marker-pulse"></div>

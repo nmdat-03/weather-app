@@ -68,8 +68,8 @@ export default async function WeatherDetailsPage({
                 </div>
 
                 {/* HOURLY FORECAST */}
-                <div className="bg-white/50 p-4 rounded-2xl backdrop-blur-2xl">
-                    <h2 className="flex items-center gap-2 text-2xl font-semibold">
+                <div className="bg-black/20 p-4 rounded-2xl backdrop-blur-2xl">
+                    <h2 className="flex items-center gap-2 text-white text-2xl font-semibold">
                         <Clock size={20} />
                         Hourly Forecast
                     </h2>
@@ -84,8 +84,8 @@ export default async function WeatherDetailsPage({
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     {/* 7-DAY FORECAST */}
-                    <div className="bg-white/50 p-4 rounded-2xl backdrop-blur-2xl">
-                        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+                    <div className="bg-black/20 p-4 rounded-2xl backdrop-blur-2xl">
+                        <h2 className="flex items-center gap-2 text-white text-2xl font-semibold">
                             <CalendarDays size={20} />
                             7-Day Forecast
                         </h2>

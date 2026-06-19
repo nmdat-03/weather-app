@@ -1,15 +1,17 @@
 "use client";
 
 import { searchLocations, type LocationResult } from "@/services/geocoding";
-import { Search } from "lucide-react";
+import { LocateFixed } from "lucide-react";
 import { useRef, useState } from "react";
 
 type SearchBarProps = {
     onSelectLocation: (location: LocationResult) => void;
+    onCurrentLocation: () => void;
 };
 
 export default function SearchBar({
     onSelectLocation,
+    onCurrentLocation,
 }: SearchBarProps) {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<LocationResult[]>([]);
@@ -17,7 +19,7 @@ export default function SearchBar({
 
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-    const handleChange = (
+    const handleChange = async (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
         const value = e.target.value;
@@ -65,13 +67,16 @@ export default function SearchBar({
                         value={query}
                         onChange={handleChange}
                         placeholder="Search city..."
-                        className="w-full rounded-xl border border-white/20 bg-black/30 py-3 pl-3 pr-12 text-white backdrop-blur outline-none" />
+                        className="w-full rounded-xl border border-white/20 bg-black/30 py-3 pl-3 pr-12 text-white backdrop-blur outline-none"
+                    />
 
                     <button
-                        type="submit"
+                        type="button"
+                        onClick={onCurrentLocation}
+                        title="Use current location"
                         className="absolute right-2 top-1/2 flex h-8 w-10 -translate-y-1/2 items-center justify-center rounded-lg bg-linear-to-t from-zinc-300 via-zinc-200 to-zinc-100 text-black transition hover:scale-105"
                     >
-                        <Search size={16} />
+                        <LocateFixed size={16} />
                     </button>
                 </form>
             </div>
@@ -92,7 +97,9 @@ export default function SearchBar({
                                 onClick={() => {
                                     onSelectLocation(location);
 
-                                    setQuery(`${location.name}, ${location.country}`);
+                                    setQuery(
+                                        `${location.name}, ${location.country}`
+                                    );
 
                                     setResults([]);
                                 }}

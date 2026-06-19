@@ -27,15 +27,12 @@ export default function HourlyForecast({
         relative
         overflow-hidden
         rounded-3xl
-        border
-        border-white/20
-        bg-white/40
+        bg-white/90
         p-4
         backdrop-blur-2xl
         transition-all
         duration-300
         hover:-translate-y-1
-        hover:bg-white/50
         [box-shadow:
         inset_0_2px_2px_rgba(255,255,255,0.4),
         inset_0_-2px_2px_rgba(255,255,255,0.1),
