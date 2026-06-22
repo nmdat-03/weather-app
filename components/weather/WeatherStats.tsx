@@ -16,12 +16,21 @@ type WeatherStatsProps = {
     rainChance: number;
 };
 
-function getTemperatureColor(temp: number) {
-    if (temp <= 15) return "text-blue-500";
-    if (temp <= 25) return "text-emerald-500";
-    if (temp <= 32) return "text-yellow-500";
-    if (temp <= 36) return "text-orange-500";
-    return "text-red-500";
+
+function getTemperatureGradient(temp: number) {
+    if (temp <= 15)
+        return "bg-gradient-to-b from-cyan-400 to-white";
+
+    if (temp <= 25)
+        return "bg-gradient-to-b from-green-300 to-green-500";
+
+    if (temp <= 32)
+        return "bg-gradient-to-b from-yellow-300 to-yellow-500";
+
+    if (temp <= 36)
+        return "bg-gradient-to-b from-orange-300 to-orange-500";
+
+    return "bg-gradient-to-b from-purple-300 to-purple-500";
 }
 
 const containerVariants = {
@@ -40,7 +49,7 @@ export default function WeatherStats({
     current,
     rainChance,
 }: WeatherStatsProps) {
-    const temperatureColor = getTemperatureColor(current.temp_c);
+    const temperatureGradient = getTemperatureGradient(current.temp_c);
 
     const temperatureStat = {
         label: "Temperature",
@@ -116,7 +125,7 @@ export default function WeatherStats({
 
                         <div className="absolute inset-0 flex items-center justify-center">
                             <p
-                                className={`text-5xl font-bold md:text-7xl ${temperatureColor}`}
+                                className={`text-5xl font-bold md:text-7xl bg-clip-text text-transparent ${temperatureGradient}`}
                             >
                                 {temperatureStat.value}
                             </p>
