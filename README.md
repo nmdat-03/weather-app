@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌤️ Weather App
 
-## Getting Started
+A modern weather forecast application built with **Next.js 16**, **React 19**, and **TypeScript**. The app provides real-time weather information, 7-day forecasts, location-based weather updates, interactive charts, and smooth animations for an engaging user experience.
 
-First, run the development server:
+## ✨ Features
+
+- 🔍 Search weather by city name
+- 📍 Get weather based on current location
+- 🌡️ Real-time temperature and weather conditions
+- 📅 7-day weather forecast
+- 💧 Humidity information
+- 🌬️ Wind speed and direction
+- 👀 Visibility data
+- 🌧️ Rain probability forecast
+- 📊 Interactive weather charts
+- 🌎 Interactive globe visualization
+- ✨ Smooth animations with Framer Motion
+- 📱 Fully responsive design
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS 4
+
+### State Management
+
+- Zustand
+
+### Forms & Validation
+
+- React Hook Form
+- Zod
+
+### Data Fetching
+
+- Axios
+
+### UI & Animation
+
+- Framer Motion
+- Lucide React Icons
+- React CountUp
+
+### Data Visualization
+
+- Recharts
+- React Globe GL
+- Three.js
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/nmdat-03/weather-app.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+cd weather-app
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2. Install dependencies
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Using pnpm:
 
-## Learn More
+```bash
+pnpm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Configure environment variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create a `.env` file in the root directory:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+NEXT_PUBLIC_WEATHER_API_KEY=
+```
 
-## Deploy on Vercel
+Get your API key from:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- https://www.weatherapi.com/
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. Run the development server
+
+```bash
+pnpm dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+## 🌍 API
+
+This project uses:
+
+### WeatherAPI
+
+https://www.weatherapi.com/
+
+Endpoints used:
+
+- Current Weather
+- Forecast Weather (7 Days)
+- Location Search
