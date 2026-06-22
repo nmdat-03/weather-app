@@ -1,6 +1,7 @@
 # 🌤️ Weather App
 
 A modern weather forecast application built with **Next.js 16**, **React 19**, and **TypeScript**. The app provides real-time weather information, 7-day forecasts, location-based weather updates, interactive charts, and smooth animations for an engaging user experience.
+Live Demo: https://ngdat-weather-app.vercel.app/
 
 ## ✨ Features
 
